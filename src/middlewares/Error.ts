@@ -1,0 +1,17 @@
+import { Request, Response, NextFunction } from 'express';
+
+export default (async (error: Error, _req: Request, res: Response, _next: NextFunction):
+Promise<Response> => {
+  const { name, message } = error;
+
+  switch (name) {
+    case 'ValidationError':
+      return res.status(400).json({ message });
+    case 'NotFoundError':
+      return res.status(404).json({ message });
+    case 'ConflictError':
+      return res.status(409).json({ message });
+    default:
+      return res.sendStatus(500).json({ message: 'Bad request' });
+  }
+});
