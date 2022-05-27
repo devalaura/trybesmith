@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-export default (async (error: Error, _req: Request, res: Response, _next: NextFunction):
-Promise<Response> => {
+export default ((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   const { name, message } = error;
 
   switch (name) {

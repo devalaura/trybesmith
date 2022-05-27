@@ -3,14 +3,10 @@ import { NextFunction, Request, Response } from 'express';
 import ProductService from '../services/Product';
 
 export default class ProductController {
-  private service: ProductService;
+  constructor(public service = new ProductService()) {}
 
-  constructor() {
-    this.service = new ProductService();
-  }
-
-  public async getAll(_req: Request, res: Response, next: NextFunction): 
-  Promise<Response | NextFunction> {
+  public getAll = async (_req: Request, res: Response, next: NextFunction):
+  Promise<Response | void> => {
     try {
       const result = await this.service.getAll();
 
@@ -18,5 +14,5 @@ export default class ProductController {
     } catch (e) {
       return next(e);
     }
-  }
+  };
 }

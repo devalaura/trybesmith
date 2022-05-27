@@ -9,11 +9,11 @@ export default class ProductModel {
     this.connection = connection;
   }
 
-  public async getAll(): Promise<Product[]> {
+  public getAll = async (): Promise<Product[]> => {
     const result = await this.connection.execute(
       'SELECT * FROM Trybesmith.Products',
     );
     const [products] = result;
     return products as Product[];
-  }
+  };
 }
