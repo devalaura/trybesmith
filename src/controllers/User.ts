@@ -8,11 +8,13 @@ export default class UserController {
   public create = async (req: Request, res: Response, next: NextFunction):
   Promise<Response | void> => {
     try {
-      const { username, level, classe, password } = req.body;
+      const { username, classe, level, password } = req.body;
 
-      const result = await this.service.create(username, level, classe, password);
+      await this.service.create(username, classe, level, password);
 
-      return res.status(201).json(result);
+      const { authorization } = req.headers;
+
+      return res.status(201).json({ token: authorization });
     } catch (e) {
       return next(e);
     }
