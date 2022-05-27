@@ -11,6 +11,7 @@ export default ((error: Error, _req: Request, res: Response, _next: NextFunction
     case 'ConflictError':
       return res.status(409).json({ message });
     default:
-      return res.sendStatus(500).json({ message: 'Bad request' });
+      console.log({ name: message });
+      return res.status(500).json({ message: 'Bad request' });
   }
 });

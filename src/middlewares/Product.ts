@@ -1,28 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
 
+const invalid = (value: string | number, param: string) => {
+  if (!value) return { status: 400, message: `'${param}' is required` };
+  if (typeof value !== 'string') return { status: 422, message: `'${param}' must be a string` };
+  if (value.length < 2) {
+    return { status: 422, message: `'${param}' must be a least 3 characters long` };
+  }
+};
+
 const productValidation = async (req: Request, res: Response, next: NextFunction):
 Promise<Response | void> => {
   try {
     const { name, amount } = req.body;
 
-    switch (true) {
-      case (!name):
-        return res.status(400).json({ message: '\'name\' is required' });
-      case (!amount):
-        return res.status(400).json({ message: '\'amount\' is required' });
-      case (name.call() !== 'string'):
-        return res.status(422).json({ message: '\'name\' must be a string' });
-      case (amount.call() !== 'string'):
-        return res.status(422).json({ message: '\'amount\' must be a string' });
-      case (name.length < 3):
-        return res.status(422)
-          .json({ message: '\'name\' length must be a least 3 characters long' });
-      case (amount.length < 3):
-        return res.status(422)
-          .json({ message: '\'amount\' length must be a least 3 characters long' });
-      default:
-        return next();
+    const nameInvalid = invalid(name, 'name');
+    const amountInvalid = invalid(amount, 'amount');
+
+    if (nameInvalid) {
+      return res.status(nameInvalid.status).json(nameInvalid.message);
+    } if (amountInvalid) {
+      return res.status(amountInvalid.status).json(amountInvalid.message);
     }
+    return next();
   } catch (e) {
     return next(e);
   }
