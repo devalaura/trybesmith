@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
 const invalid = (value: string | number, param: string) => {
-  if (!value) return { status: 400, message: `'${param}' is required` };
-  if (typeof value !== 'string') return { status: 422, message: `'${param}' must be a string` };
+  if (!value) return { status: 400, message: `"${param}" is required` };
+  if (typeof value !== 'string') return { status: 422, message: `"${param}" must be a string` };
   if (value.length < 2) {
-    return { status: 422, message: `'${param}' must be a least 3 characters long` };
+    return { status: 422, message: `"${param}" length must be at least 3 characters long` };
   }
 };
 
