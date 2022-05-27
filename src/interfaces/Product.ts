@@ -1,6 +1,6 @@
 export default interface Product {
   id?: number,
   name: string,
-  amout: string,
+  amount: string,
   orderId?: number | null,
 }
