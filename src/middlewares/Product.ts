@@ -17,9 +17,9 @@ Promise<Response | void> => {
     const amountInvalid = invalid(amount, 'amount');
 
     if (nameInvalid) {
-      return res.status(nameInvalid.status).json(nameInvalid.message);
+      return res.status(nameInvalid.status).json({ message: nameInvalid.message });
     } if (amountInvalid) {
-      return res.status(amountInvalid.status).json(amountInvalid.message);
+      return res.status(amountInvalid.status).json({ message: amountInvalid.message });
     }
     return next();
   } catch (e) {
