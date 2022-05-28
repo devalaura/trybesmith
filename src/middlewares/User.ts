@@ -21,7 +21,7 @@ const invalid = (
   } if (param === 'classe') invalidLevel(level);
 };
 
-const productValidation = async (req: Request, res: Response, next: NextFunction):
+const userValidation = async (req: Request, res: Response, next: NextFunction):
 Promise<Response | void> => {
   try {
     const { username, classe, level, password } = req.body;
@@ -44,4 +44,4 @@ Promise<Response | void> => {
   }
 };
 
-export default productValidation;
+export default userValidation;
