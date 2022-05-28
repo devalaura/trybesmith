@@ -1,6 +1,6 @@
 import OrderModel from '../models/Order';
 import connection from '../models/connection';
-import Order from '../interfaces/Order';
+// import Order from '../interfaces/Order';
 
 export default class OrderService {
   public model: OrderModel;
@@ -9,8 +9,14 @@ export default class OrderService {
     this.model = new OrderModel(connection);
   }
 
-  public getAll = async (): Promise<Order[]> => {
+  public getAll = async () => {
     const orders = await this.model.getAll();
-    return orders;
+    
+    const result = orders.map(({ id, userId, productsIds }) => ({ 
+      id,
+      userId,
+      productsIds: [productsIds] }));
+    
+    return result;
   };
 }

@@ -11,9 +11,9 @@ export default class OrderModel {
 
   public getAll = async (): Promise<Order[]> => {
     const [products] = await this.connection.execute(
-      `SELECT Orders.id, Orders.userId, Products.id as productIds 
+      `SELECT Orders.id, Orders.userId, Products.id as productsIds 
       FROM Trybesmith.Orders JOIN Trybesmith.Products WHERE Products.orderId = Orders.id
-      ORDER BY Orders.id ASC;`,
+      ORDER BY Orders.userId ASC;`,
     );
     return products as Order[];
   };

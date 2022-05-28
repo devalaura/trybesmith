@@ -10,7 +10,7 @@ export default class OrderController {
     try {
       const orders = await this.service.getAll();
 
-      return res.status(201).json(orders);
+      return res.status(200).json(orders);
     } catch (e) {
       return next(e);
     }
