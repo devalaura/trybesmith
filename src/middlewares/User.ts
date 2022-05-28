@@ -18,7 +18,7 @@ const invalid = (
   if (typeof value !== 'string') return { status: 422, message: `"${param}" must be a string` };
   if (value.length <= min) {
     return { status: 422, message: `"${param}" length must be at least ${min} characters long` };
-  } if (param === 'classe') invalidLevel(level);
+  } if (param === 'classe') return invalidLevel(level);
 };
 
 const userValidation = async (req: Request, res: Response, next: NextFunction):
