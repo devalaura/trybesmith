@@ -19,4 +19,22 @@ export default class UserController {
       return next(e);
     }
   };
+
+  public login = async (req: Request, res: Response, next: NextFunction):
+  Promise<Response | void> => {
+    try {
+      const { username, password } = req.body;
+      const { authorization } = req.headers;
+
+      const findUser = await this.service.login(username, password);
+
+      if (!findUser) {
+        return res.status(400).json({ message: 'Username or password invalid' });
+      }
+
+      return res.status(204).json({ message: authorization });
+    } catch (e) {
+      return next(e);
+    }
+  };
 }

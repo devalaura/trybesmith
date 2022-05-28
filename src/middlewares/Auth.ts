@@ -8,11 +8,12 @@ const jwtConfig: SignOptions = {
   algorithm: 'HS256',
 };
 
-export default (async (req: Request, _res: Response, next: NextFunction) => {
+const createJWT = async (req: Request, _res: Response, next: NextFunction):
+Promise<Response | void> => {
   try {
-    const { email, password } = req.body;
+    const { id, username } = req.body;
     
-    const token = sign({ data: { email, password } }, SECRET, jwtConfig);
+    const token = sign({ data: { id, username } }, SECRET, jwtConfig);
     
     req.headers.authorization = token;
 
@@ -20,4 +21,6 @@ export default (async (req: Request, _res: Response, next: NextFunction) => {
   } catch (e) {
     return next(e);
   }
-});
+};
+
+export default { createJWT };
