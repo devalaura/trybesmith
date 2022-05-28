@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 const invalidLevel = (level: number | string | null) => {
-  if (!level) return { status: 400, message: '"level" is required' };
+  if (!level && level !== 0) return { status: 400, message: '"level" is required' };
   if (typeof level !== 'number') return { status: 422, message: '"level" must be a number' };
   if (level <= 0) {
     return { status: 422, message: '"level" must be greater than or equal to 1' };
