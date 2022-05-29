@@ -1,38 +1,40 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 
 import UserService from '../services/User';
+import RequestExtended from '../interfaces/RequestExtended';
 
 export default class UserController {
   constructor(public service = new UserService()) {}
 
-  public create = async (req: Request, res: Response, next: NextFunction):
-  Promise<Response | void> => {
+  public create = async (req: RequestExtended, _res: Response, next: NextFunction):
+  Promise<void> => {
     try {
       const { username, classe, level, password } = req.body;
 
-      await this.service.create(username, classe, level, password);
+      const user = await this.service.create(username, classe, level, password);
 
-      const { authorization } = req.headers;
+      req.user = user;
 
-      return res.status(201).json({ token: authorization });
+      return next();
     } catch (e) {
       return next(e);
     }
   };
 
-  public login = async (req: Request, res: Response, next: NextFunction):
+  public login = async (req: RequestExtended, res: Response, next: NextFunction):
   Promise<Response | void> => {
     try {
       const { username, password } = req.body;
-      const { authorization } = req.headers;
 
-      const findUser = await this.service.login(username, password);
-
-      if (!findUser) {
-        return res.status(400).json({ message: 'Username or password invalid' });
+      const user = await this.service.login(username, password);
+      
+      if (!user) {
+        return res.status(401).json({ message: 'Username or password invalid' });
       }
 
-      return res.status(204).json({ message: authorization });
+      req.user = user;
+
+      return next();
     } catch (e) {
       return next(e);
     }

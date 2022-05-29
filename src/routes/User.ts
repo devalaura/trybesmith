@@ -9,7 +9,7 @@ const router = Router();
 
 const controller = new UserController();
 
-router.post('/', userValidation, Authorization.createJWT, controller.create);
+router.post('/', userValidation, controller.create, Authorization);
 router.use(Error);
 
 export default router;

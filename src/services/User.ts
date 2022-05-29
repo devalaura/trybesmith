@@ -10,13 +10,19 @@ export default class UserService {
   }
 
   public create = async (username: string, classe: string, level: number, password: string):
-  Promise<void> => {
-    await this.model.create(username, classe, level, password);
+  Promise<User[] | void> => {
+    const user = await this.model.create(username, classe, level, password);
+
+    return user as User[];
   };
 
   public login = async (username: string, password: string): Promise<User[] | void> => {
-    const findUser = await this.model.login(username, password);
+    const user = await this.model.login(username, password);
 
-    return findUser;
+    if (user?.length === 0) {
+      return undefined;
+    }
+
+    return user;
   };
 }

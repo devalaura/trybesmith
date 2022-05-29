@@ -10,19 +10,23 @@ export default class UserModel {
   }
 
   public create = async (username: string, classe: string, level: number, password: string): 
-  Promise<void> => {
-    await this.connection.execute<ResultSetHeader>(
+  Promise<User[] | void> => {
+    const [user] = await this.connection.execute<ResultSetHeader>(
       'INSERT INTO Trybesmith.Users (username, classe, level, password) VALUES (?, ?, ?, ?)',
       [username, classe, level, password],
     );
+
+    const { insertId } = user;
+
+    return [{ id: insertId, username, classe, level, password, route: 201 }] as User[];
   };
 
   public login = async (username: string, password: string): Promise<User[] | void> => {
-    const [success] = await this.connection.execute(
+    const [user] = await this.connection.execute(
       'SELECT * FROM Trybesmith.Users WHERE username = ? AND password = ?',
       [username, password],
     );
-
-    if (success) return success as User[];
+    
+    return user as User[];
   };
 }
