@@ -1,7 +1,8 @@
 import { Response, NextFunction } from 'express';
-import { sign, SignOptions } from 'jsonwebtoken';
+import { sign, SignOptions, verify } from 'jsonwebtoken';
 
 import RequestExtended from '../interfaces/RequestExtended';
+import Authorization from '../interfaces/Auth';
 
 const SECRET = 'hardcodedpqnaopodeusarvariaveldeambiente';
 
@@ -28,4 +29,21 @@ Promise<Response | void> => {
   }
 };
 
-export default Authentication;
+const Validation = async (req: RequestExtended, res: Response, next: NextFunction):
+Promise<Response | void> => {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+
+  const token = verify(authorization, SECRET);
+
+  const { id, username } = token as Authorization;
+
+  req.user = [{ id, username }];
+  
+  return next();
+};
+
+export default { Authentication, Validation };
