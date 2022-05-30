@@ -28,4 +28,11 @@ export default class ProductModel {
       amount,
     };
   };
+
+  public update = async (orderId: number, productId: number): Promise<void> => {
+    await this.connection.execute(
+      'UPDATE Trybesmith.Products (orderId) VALUES (?) WHERE id = ?',
+      [orderId, productId],
+    );
+  };
 }

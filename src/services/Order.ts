@@ -35,12 +35,9 @@ export default class OrderService {
       const { id } = user[0];
       const findUser = await this.userModel.getById(id);
       if (findUser) {
-        const insertOrders = productsIds.map(async (productId) => {
-          await this.model.create(id, productId);
-        });
-
-        insertOrders.map(async (order) => {
-          await this.productModel.update(order);
+        productsIds.map(async (productId) => {
+          const insertOrder = await this.model.create(id, productId);
+          await this.productModel.update(insertOrder, productId);
         });
 
         return {
