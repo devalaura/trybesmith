@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
 import OrderService from '../services/Order';
+import RequestExtended from '../interfaces/RequestExtended';
 
 export default class OrderController {
   constructor(public service = new OrderService()) {}
@@ -15,4 +16,18 @@ export default class OrderController {
       return next(e);
     }
   };
+
+  public create = async (req: RequestExtended, res: Response, next: NextFunction):
+  Promise<Response | void> => {
+    try {
+      const { productsIds } = req.body;
+      const { user } = req;
+
+      const order = await this.service.create(productsIds, user);
+
+      return res.status(204).json(order);
+    } catch (e) {
+      return next(e);
+    }
+  }
 }
