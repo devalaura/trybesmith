@@ -31,19 +31,23 @@ Promise<Response | void> => {
 
 const Validation = async (req: RequestExtended, res: Response, next: NextFunction):
 Promise<Response | void> => {
-  const { authorization } = req.headers;
+  try {
+    const { authorization } = req.headers;
 
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token not found' });
+    if (!authorization) {
+      return res.status(401).json({ message: 'Token not found' });
+    }
+
+    const token = verify(authorization, SECRET);
+
+    const { id, username } = token as Authorization;
+
+    req.user = [{ id, username }];
+    
+    return next();
+  } catch (e) {
+    return next(e);
   }
-
-  const token = verify(authorization, SECRET);
-
-  const { id, username } = token as Authorization;
-
-  req.user = [{ id, username }];
-  
-  return next();
 };
 
 export default { Authentication, Validation };
