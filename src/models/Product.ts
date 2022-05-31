@@ -31,7 +31,7 @@ export default class ProductModel {
 
   public update = async (orderId: number, productId: number): Promise<void> => {
     await this.connection.execute(
-      'UPDATE Trybesmith.Products (orderId) VALUES (?) WHERE id = ?',
+      'UPDATE Trybesmith.Products SET orderId = ? WHERE id = ?',
       [orderId, productId],
     );
   };

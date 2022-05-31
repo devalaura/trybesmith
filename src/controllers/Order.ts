@@ -23,13 +23,12 @@ export default class OrderController {
       const { productsIds } = req.body;
       const { user } = req;
 
-      const order = await this.service.create(productsIds, user);
+      if (user) {
+        const { id } = user[0];
+        await this.service.create(productsIds, id);
 
-      if (order.status) {
-        return res.status(order.status).json({ message: order.message });
+        return res.status(201).json({ userId: id, productsIds });
       }
-
-      return res.status(204).json(order);
     } catch (e) {
       return next(e);
     }

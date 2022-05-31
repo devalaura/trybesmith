@@ -1,8 +1,12 @@
 import { Response, NextFunction } from 'express';
 import { sign, SignOptions, verify } from 'jsonwebtoken';
 
+import UserModel from '../models/User';
+import connection from '../models/connection';
+
 import RequestExtended from '../interfaces/RequestExtended';
-import Authorization from '../interfaces/Auth';
+import Auth from '../interfaces/Auth';
+import User from '../interfaces/User';
 
 const SECRET = 'hardcodedpqnaopodeusarvariaveldeambiente';
 
@@ -29,23 +33,29 @@ Promise<Response | void> => {
   }
 };
 
+const model = new UserModel(connection);
+
 const Validation = async (req: RequestExtended, res: Response, next: NextFunction):
 Promise<Response | void> => {
   try {
     const { authorization } = req.headers;
-
-    if (!authorization) {
-      return res.status(401).json({ message: 'Token not found' });
-    }
+    if (!authorization) return res.status(401).json({ message: 'Token not found' });
 
     const token = verify(authorization, SECRET);
+    const { data } = token as Auth;
+    const foundUser = await model.getById(data?.id);
 
-    const { id, username } = token as Authorization;
+    if (foundUser) {
+      req.user = [{ id: data?.id, username: data?.username }] as User[];
+  
+      return next();
+    }
 
-    req.user = [{ id, username }];
-    
-    return next();
+    return res.status(401).json({ message: 'Invalid token' });
   } catch (e) {
+    if ((e as Error).message.includes('jwt')) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
     return next(e);
   }
 };

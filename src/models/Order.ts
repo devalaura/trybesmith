@@ -18,11 +18,12 @@ export default class OrderModel {
     return products as Order[];
   };
 
-  public create = async (userId: number, productId: number): Promise<number> => {
+  public create = async (userId: number): Promise<number> => {
     const [order] = await this.connection.execute<ResultSetHeader>(
-      'INSERT INTO Trybesmith.Orders (userId, productId) VALUES ?, ?',
-      [userId, productId],
+      'INSERT INTO Trybesmith.Orders (userId) VALUES (?)',
+      [userId],
     );
+
     const { insertId } = order;
 
     return insertId;

@@ -1,20 +1,14 @@
 import OrderModel from '../models/Order';
-import UserModel from '../models/User';
 import ProductModel from '../models/Product';
 import connection from '../models/connection';
-import Order from '../interfaces/Order';
-import User from '../interfaces/User';
 
 export default class OrderService {
   public model: OrderModel;
-
-  public userModel: UserModel;
 
   public productModel: ProductModel;
 
   constructor() {
     this.model = new OrderModel(connection);
-    this.userModel = new UserModel(connection);
     this.productModel = new ProductModel(connection);
   }
 
@@ -29,23 +23,11 @@ export default class OrderService {
     return result;
   };
 
-  public create = async (productsIds: number[], user: User[] | void): 
-  Promise<Order> => {
-    if (user) {
-      const { id } = user[0];
-      const findUser = await this.userModel.getById(id);
-      if (findUser) {
-        productsIds.map(async (productId) => {
-          const insertOrder = await this.model.create(id, productId);
-          await this.productModel.update(insertOrder, productId);
-        });
-
-        return {
-          userId: id,
-          productsIds,
-        } as Order;
-      }
-    }
-    return { status: 401, message: 'Invalid token' } as Order;
+  public create = async (productsIds: number[], userId: number): 
+  Promise<void> => {
+    await Promise.all(productsIds.map(async (productId: number) => {
+      const insertOrder = await this.model.create(userId);
+      await this.productModel.update(insertOrder, productId);
+    }));
   };
 }

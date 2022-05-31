@@ -13,9 +13,9 @@ const validationOrder = async (req: RequestExtended, res: Response, next: NextFu
       case (notExists(productsIds)): 
         return res.status(400).json({ message: '"productsIds" is required' });
       case (isntArray(productsIds)): 
-        return res.status(400).json({ message: '"productsIds" must be an array' });
+        return res.status(422).json({ message: '"productsIds" must be an array' });
       case (emptyArray(productsIds)): 
-        return res.status(400).json({ message: '"productsIds" must include only numbers' });
+        return res.status(422).json({ message: '"productsIds" must include only numbers' });
       default:
         return next();
     }
